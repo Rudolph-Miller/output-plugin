@@ -68,7 +68,7 @@ class OutputPlugin
     this[table] = {}
     params =
       TableName: table
-    this[table].putItem = (item) =>
+    this[table].putItem = (item, callback) =>
       params.Item = item
       @dynamo.putItem params, (err, data, callback) ->
         if err
