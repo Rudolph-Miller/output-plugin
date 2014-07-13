@@ -1,0 +1,25 @@
+{
+	"author": "Rudolph-Miller",
+	"name": "output-plugin",
+	"version": "1.0.0",
+		"keywords": ["log", "tail", "log-emitter"],
+		"description": "ouput plugin for log-emitter",
+		"repository": {
+			"type": "git",
+			"url": "git://github.com/Rudolph-Miller/output-plugin"
+		},
+		"scripts": {
+		  "prepublish": "coffee -o lib/ -c src/*.coffee",
+		  "build": "coffee -o lib/ -c src/*.coffee"
+		},
+		"main": "lib/dispathcer.javascript",
+		"engines": {
+			"node":"*"
+		},
+		"dependencies": {
+		},
+		"devDependencies": {
+		"aws-sdk": "*",
+			"coffee-script":"*"
+		}
+}
