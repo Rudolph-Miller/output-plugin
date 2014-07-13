@@ -5,7 +5,7 @@ class OutputPlugin
     @config.awsCredential (option.awsCredential) if option.awsCredential
     if option.dynamo
       @dynamo = new aws.DynamoDB
-      if typeof option.dynamo == 'Object'
+      if typeof option.dynamo == 'object'
         for table in option.dynamo
           @dynamoConfig table
       else

@@ -1,7 +1,7 @@
 {
 	"author": "Rudolph-Miller",
 	"name": "output-plugin",
-	"version": "1.0.0",
+	"version": "1.0.1",
 		"keywords": ["log", "tail", "log-emitter"],
 		"description": "ouput plugin for log-emitter",
 		"repository": {
@@ -19,7 +19,7 @@
 		"dependencies": {
 		},
 		"devDependencies": {
-		"aws-sdk": "*",
+			"aws-sdk": "*",
 			"coffee-script":"*"
 		}
 }
