@@ -1,7 +1,7 @@
 {
 	"author": "Rudolph-Miller",
 	"name": "output-plugin",
-	"version": "1.0.1",
+	"version": "1.0.2",
 		"keywords": ["log", "tail", "log-emitter"],
 		"description": "ouput plugin for log-emitter",
 		"repository": {

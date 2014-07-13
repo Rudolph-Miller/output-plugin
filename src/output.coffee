@@ -12,43 +12,53 @@ class OutputPlugin
         @dynamoConfig option.dynamo
     @logType = option.logType if option.logType
 
-  convert: (log) ->
+  convert: (log, callback) ->
     if @logType
-      @selectType @logType, log
+      @selectType @logType, log, callback
     else
-      JSON.parse log
+      try
+        callback null, JSON.parse log
+      catch error
+        callback error
 
-  selectType: (type, log) ->
+  selectType: (type, log, callback) ->
     switch type
       when 'tsv'
-        @tsvParse log
+        @tsvParse log, callback
       when 'csv'
-        @csvParse log
+        @csvParse log, callback
       else
         console.log 'not supported type'
+        callback 'not supported type'
 
   emit: (log) ->
     console.log @convert log.data
 
-  tsvParse: (log) ->
-    array = log.split('\t')
-    result = []
-    for item in array
-      kv = item.split(':')
-      key = kv[0]
-      val = kv.slice(1).join(':')
-      result[key] = val
-    return result
+  tsvParse: (log, callback) ->
+    try
+      array = log.split('\t')
+      result = []
+      for item in array
+        kv = item.split(':')
+        key = kv[0]
+        val = kv.slice(1).join(':')
+        result[key] = val
+      callback null, result
+    catch error
+      callback error
 
   csvParse: (log) ->
-    array = log.split(',')
-    result = []
-    for item in array
-      kv = item.split(':')
-      key = kv[0]
-      val = kv.slice(1).join(':')
-      result[key] = val
-    return result
+    try
+      array = log.split(',')
+      result = []
+      for item in array
+        kv = item.split(':')
+        key = kv[0]
+        val = kv.slice(1).join(':')
+        result[key] = val
+      callback null, result
+    catch error
+      callback error
 
   config:
     awsCredential: (path) ->
