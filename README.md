@@ -16,6 +16,26 @@ OutputPlugin for Log Emitter
         N: '20140630'
     plugin.tablename.pugItem item, callback
     plugin.tablename.getItem item, callback
+
+		params =
+			getKey:
+				id:
+					S: 'AAAAA'
+				date:
+					N: '140731'
+			updateAttribute: 'value'
+			Key:
+				id:
+					S: 'AAAAA'
+				date:
+					N: '140731'
+				value:
+					N: '1'
+				info:
+					S: 'Hello'
+
+		plugin.tablename.increment params, callback
+		 >> updateItem by getKey and increment updateAttribute, if there is no column for getKey then create column by Key
     ```
   * option.logType = type of log
     * 'tsv'

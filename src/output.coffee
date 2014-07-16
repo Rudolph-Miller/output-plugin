@@ -2,7 +2,7 @@ aws = require 'aws-sdk'
 
 class OutputPlugin
   constructor: (option={}) ->
-    @config.awsCredential (option.awsCredential) if option.awsCredential
+    aws.config.loadFromPath option.awsCredential if option.awsCredential
     if option.dynamo
       @dynamo = new aws.DynamoDB
       if typeof option.dynamo == 'object'
@@ -66,22 +66,56 @@ class OutputPlugin
 
   dynamoConfig: (table) ->
     this[table] = {}
-    params =
-      TableName: table
     this[table].putItem = (item, callback) =>
-      params.Item = item
-      @dynamo.putItem params, (err, data, callback) ->
+      putParams =
+        TableName: table
+        Item: item
+      @dynamo.putItem putParams, (err, data) ->
         if err
           callback err
         else
           callback null, data
     this[table].getItem = (option, callback) =>
-      params.Key = option.Key
-      params.AttributesToGet = option.AttributesToGet if option.AttributesToGet
-      @dynamo.getItem params, (err, data) ->
+      getParams =
+        TableName: table
+        Key: option.Key
+      getParams.AttributesToGet = option.AttributesToGet if option.AttributesToGet
+      @dynamo.getItem getParams, (err, data) ->
         if err
           callback err
         else
           callback null, data
+    this[table].increment = (item, callback) =>
+      updateParams =
+        TableName: table
+        Key: item.getKey
+        AttributeUpdates: {}
+        Expected: {}
+      updateParams.ConditionalOperator = 'AND' if Object.keys(item.getKey).length > 1
+      for key in Object.keys(item.getKey)
+        updateParams.Expected[key] =
+          Value: item.getKey[key]
+          Exists: true
+      updateParams.AttributeUpdates[item.updateAttribute] =
+        Action: 'ADD'
+        Value:
+          N: '1'
+      @dynamo.updateItem updateParams, (err, data) =>
+        if err
+          putParams =
+            TableName: table
+            Item: item.Key
+          @dynamo.putItem  putParams, (err, data) ->
+            if err
+              callback err
+            else
+              callback null, data
+        else
+          callback null, data
+
+
+option =
+  awsCredential: '/Users/tomoya/git-lab/lambda-driver/config/aws_credentials.json'
+  dynamo: 'sometracking'
 
 module.exports = OutputPlugin
